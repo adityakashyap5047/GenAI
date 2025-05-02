@@ -2,3 +2,4 @@ langchain
 python-dotenv
 langchain_community
 pypdf
+bs4
