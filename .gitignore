@@ -176,3 +176,4 @@ cython_debug/
 
 # Custom Folder Names
 Langchain/
+1. Langchain/1.6 - Vector Store DB/faiss_index/
