@@ -178,3 +178,4 @@ cython_debug/
 Langchain/
 1. Langchain/1.6 - Vector Store DB/faiss_index/
 1. Langchain/1.6 - Vector Store DB/chroma_db/
+LCEL/
