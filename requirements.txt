@@ -14,3 +14,4 @@ langchain_huggingface
 faiss_cpu
 langchain_chroma
 streamlit
+langchain_groq
