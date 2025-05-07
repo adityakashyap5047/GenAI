@@ -22,3 +22,10 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
+def generate_response(question, api_key, llm, temperature, max_tokens):
+    openai.api_key = api_key
+    llm = ChatOpenAI(model=llm)
+    parser = StrOutputParser()
+    chain = prompt | llm | parser
+    answer = chain.invoke({"question": question})
+    return answer
