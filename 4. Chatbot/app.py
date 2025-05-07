@@ -29,3 +29,17 @@ def generate_response(question, api_key, llm, temperature, max_tokens):
     chain = prompt | llm | parser
     answer = chain.invoke({"question": question})
     return answer
+
+### Title of the app
+st.title("Enhanced Q&A Chatbot")
+api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+
+### Drop down for LLM selection
+llm = st.sidebar.selectbox(
+    "Select the LLM model",
+    ("gpt-4o", "gpt-4-turbo", "gpt-4"),
+)
+
+### Slider for temperature and max tokens
+temperature = st.sidebar.slider("Select the temperature", min_value=0.0, max_value=1.0, value=0.5)
+max_tokens = st.sidebar.slider("Select the max tokens", min_value=50, max_value=300, value=150)
