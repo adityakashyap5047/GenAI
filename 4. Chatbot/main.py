@@ -20,3 +20,10 @@ prompt = ChatPromptTemplate.from_messages(
         ("user", "Question: {question}"),
     ]
 )
+
+def generate_response(question, llm = "gemma:2b"):
+    llm = ollama(model=llm)
+    parser = StrOutputParser()
+    chain = prompt | llm | parser
+    answer = chain.invoke({"question": question})
+    return answer
