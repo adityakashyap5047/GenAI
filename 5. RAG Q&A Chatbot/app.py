@@ -42,3 +42,11 @@ def create_vector_embedding():
         st.session_state.split_docs = st.session_state.text_splitter.split_documents(st.session_state.docs[: 50])
         st.session_state.vectorstore = FAISS.from_documents(st.session_state.split_docs, st.session_state.embeddings)
 
+prompt = st.text_input("Enter your question from the Research Paper: ")
+
+if st.button("Submit"):
+    create_vector_embedding()
+    st.write("Vector Database is ready")
+
+
+
