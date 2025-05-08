@@ -48,5 +48,18 @@ if st.button("Submit"):
     create_vector_embedding()
     st.write("Vector Database is ready")
 
+import time
 
+if prompt:
+    document_chain = create_stuff_documents_chain(llm, prompt)
+    retriever = st.session_state.vectorstore.as_retriever()
+    retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
+    start = time.process_time()
+    response = retrieval_chain.invoke({"input": prompt})
+
+    print(f"Response time: {time.process_time() - start} seconds")
+
+    st.write(response["answer"])
+
+    
