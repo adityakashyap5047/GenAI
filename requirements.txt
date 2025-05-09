@@ -18,3 +18,5 @@ langchain_groq
 fastapi
 uvicorn
 langserve
+arxiv
+wikipedia
