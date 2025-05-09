@@ -20,3 +20,6 @@ load_dotenv()
 os.environ['HF_TOKEN'] = os.getenv('HF_TOKEN')
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLm-L6-v2")
 
+### Setup the streamlit
+st.title("RAG Q&A Conversation with PDF Including Chat History")
+st.write("Upload Pdf's and chat with their content")
