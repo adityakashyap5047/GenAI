@@ -31,6 +31,24 @@ groq_api_key = st.text_input("Enter your Groq API key", type="password")
 if groq_api_key:
     llm = ChatGroq(groq_api_key=groq_api_key, model="Gemma2-9b-It")
 
+    ### Chat interface
     session_id = st.text_input("Session ID", value="default_session")
 
-    
+    ### statefully manage the chat history
+    if 'store' not in st.session_state:
+        st.session_state.store = {}
+
+    uploaded_files = st.file_uploader("Choose a PDF file", type="pdf", accept_multiple_files=True)
+
+    ### Processing of the PDF's file
+    if uploaded_files:
+        documents = []
+        for uploaded_file in uploaded_files:
+            temp_pdf = f"./temp.pdf"
+            with open(temp_pdf, "wb") as f:
+                f.write(uploaded_file.getvalue())
+                file_name = uploaded_file.name
+
+            loader = PyPDFLoader(temp_pdf)
+            docs = loader.load()
+            documents.extend(docs)
