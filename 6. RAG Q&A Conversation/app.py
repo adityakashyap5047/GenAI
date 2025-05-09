@@ -56,7 +56,11 @@ if groq_api_key:
         # Split and create embeddings for the documents
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=500)
         splits = text_splitter.split_documents(documents)
-        vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
+        vectorstore = Chroma.from_documents(
+            documents=splits,
+            embedding=embeddings,
+            persist_directory="./chroma_db",
+        )
         retriever = vectorstore.as_retriever()
 
         contextualize_q_system_prompt = (
@@ -96,7 +100,7 @@ if groq_api_key:
             ]
         )
 
-        question_answer_chain = create_retrieval_chain(llm, qa_prompt)
+        question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
         rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
 
         def get_session_history(session: str) -> BaseChatMessageHistory:
@@ -110,3 +114,20 @@ if groq_api_key:
             history_messages_key="chat_history",
             output_messages_key="answer",
         )
+
+        user_input = st.text_input("Ask a question about the PDF content")
+        if user_input:
+            session_history = get_session_history(session_id)
+            response = conversational_rag_chain.invoke(
+                {"input": user_input},
+                config={
+                    "configurable": {"session_id": session_id},
+                }
+            )
+
+            st.write(st.session_state.store)
+            st.success(f"Assistant: {response['answer']}")
+            st.write("Chat History:", session_history.messages)
+
+else:
+    st.warning("Please enter your Groq API key to use the app.")
