@@ -59,42 +59,54 @@ if groq_api_key:
         vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
         retriever = vectorstore.as_retriever()
 
-    contextualize_q_system_prompt = (
-        "Given a chat history and the latest user question"
-        "which might reference context in the chat history, "
-        "formulate a standalone question which can be understood "
-        "without the chat history. DO NOT answer the question, "
-        "just formulate it if needed and otherwise return it as is."
-    )
+        contextualize_q_system_prompt = (
+            "Given a chat history and the latest user question"
+            "which might reference context in the chat history, "
+            "formulate a standalone question which can be understood "
+            "without the chat history. DO NOT answer the question, "
+            "just formulate it if needed and otherwise return it as is."
+        )
 
-    contextualize_q_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", contextualize_q_system_prompt),
-            MessagesPlaceholder("chat_history"),
-            ("human", "{input}"),
-        ]
-    )
+        contextualize_q_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", contextualize_q_system_prompt),
+                MessagesPlaceholder("chat_history"),
+                ("human", "{input}"),
+            ]
+        )
 
-    history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
+        history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
 
-    ### Answer question
-    system_prompt = (
-        "You are an assistant for question-answering tasks."
-        "Use the following pieces of retrieved context to answer"
-        "the question. If you don't know the answer, say that you"
-        "don't know. Use three sentences maximum and keep the"
-        "answer concise."
-        "\n\n"
-        "{context}"
-    )
+        ### Answer question
+        system_prompt = (
+            "You are an assistant for question-answering tasks."
+            "Use the following pieces of retrieved context to answer"
+            "the question. If you don't know the answer, say that you"
+            "don't know. Use three sentences maximum and keep the"
+            "answer concise."
+            "\n\n"
+            "{context}"
+        )
 
-    qa_prompt = ChatPromptTemplate.from_messages(
-        [
-            ("system", system_prompt),
-            MessagesPlaceholder("chat_history"),
-            ("human", "{input}"),
-        ]
-    )
+        qa_prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompt),
+                MessagesPlaceholder("chat_history"),
+                ("human", "{input}"),
+            ]
+        )
 
-    question_answer_chain = create_retrieval_chain(llm, qa_prompt)
-    rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+        question_answer_chain = create_retrieval_chain(llm, qa_prompt)
+        rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
+
+        def get_session_history(session: str) -> BaseChatMessageHistory:
+            if session_id not in st.session_state.store:
+                st.session_state.store[session_id] = ChatMessageHistory()
+            return st.session_state.store[session_id]
+        
+        conversational_rag_chain = RunnableWithMessageHistory(
+            rag_chain, get_session_history,
+            input_messages_key="input",
+            history_messages_key="chat_history",
+            output_messages_key="answer",
+        )
