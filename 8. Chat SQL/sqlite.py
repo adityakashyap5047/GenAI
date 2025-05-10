@@ -24,3 +24,8 @@ cursor.execute('''Insert Into STUDENT values('Tom', 'DEVOPS', 'A', 85)''')
 cursor.execute('''Insert Into STUDENT values('Jerry', 'DEVOPS', 'B', 80)''')
 
 
+### Display all the records
+print("The inserted records are:")
+data = cursor.execute('''Select * from STUDENT''')
+for row in data:
+    print(row)
