@@ -36,3 +36,21 @@ if not db_uri:
 if not api_key:
     st.info("Please enter your Groq API Key")
 
+### LLM Model
+llm = ChatGroq(groq_api_key=api_key, model="Llama3-8b-8192", streaming=True)
+
+@st.cache_resource(ttl="2h")
+def configure_db(db_uri, mysql_host=None, mysql_user=None, mysql_password=None, mysql_db=None):
+    if db_uri == LOCALDB:
+        db_file_path = (Path(__file__).parent/"student.db").absolute()
+        print(f"Using local SQLite database at {db_file_path}")
+        creator = lambda: sqlite3.connect(f"file: {db_file_path}?mode=ro", uri=True)
+        return SQLDatabase(create_engine("sqlite:///", creator=creator))
+    elif db_uri == MYSQL:
+        if not all([mysql_host, mysql_user, mysql_password, mysql_db]):
+            st.error("Please provide all MySQL connection details.")
+            st.stop()
+            return None
+        mysql_uri = f"mysql+mysqlconnector://{mysql_user}:{mysql_password}@{mysql_host}/{mysql_db}"
+        print(f"Connecting to MySQL database at {mysql_uri}")
+        return SQLDatabase(create_engine(mysql_uri))
