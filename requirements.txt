@@ -20,3 +20,5 @@ uvicorn
 langserve
 arxiv
 wikipedia
+mysql-connector-python
+SQLAlchemy

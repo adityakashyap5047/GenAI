@@ -44,13 +44,15 @@ def configure_db(db_uri, mysql_host=None, mysql_user=None, mysql_password=None, 
     if db_uri == LOCALDB:
         db_file_path = (Path(__file__).parent/"student.db").absolute()
         print(f"Using local SQLite database at {db_file_path}")
-        creator = lambda: sqlite3.connect(f"file: {db_file_path}?mode=ro", uri=True)
+        creator = lambda: sqlite3.connect(f"file:{db_file_path}?mode=ro", uri=True)
         return SQLDatabase(create_engine("sqlite:///", creator=creator))
     elif db_uri == MYSQL:
         if not all([mysql_host, mysql_user, mysql_password, mysql_db]):
             st.error("Please provide all MySQL connection details.")
             st.stop()
             return None
+        if "@" in mysql_password:
+            mysql_password = mysql_password.replace("@", "%40")
         mysql_uri = f"mysql+mysqlconnector://{mysql_user}:{mysql_password}@{mysql_host}/{mysql_db}"
         print(f"Connecting to MySQL database at {mysql_uri}")
         return SQLDatabase(create_engine(mysql_uri))
@@ -59,4 +61,32 @@ if db_uri == MYSQL:
     db = configure_db(db_uri, mysql_host, mysql_user, mysql_password, mysql_db)
 else:
     db = configure_db(db_uri)
-    
+
+## toolkit 
+toolkit = SQLDatabaseToolkit(db=db, llm=llm)
+
+agent = create_sql_agent(
+    llm=llm,
+    toolkit=toolkit,
+    verbose=True,
+    agent_type=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    handle_parsing_errors=True,
+)
+
+if "messages" not in st.session_state or st.sidebar.button("Clear message history"):
+    st.session_state['messages'] = [{"role": "assistant", "content": "How can I help you?"}]
+
+for msg in st.session_state['messages']:
+    st.chat_message(msg['role']).write(msg['content'])
+
+user_query = st.chat_input(placeholder="Ask question from the database...")
+
+if user_query:
+    st.session_state['messages'].append({"role": "user", "content": user_query})
+    st.chat_message("user").write(user_query)
+
+    with st.chat_message("assistant"):
+        streamlit_callback = StreamlitCallbackHandler(st.container())
+        response = agent.run(user_query, callbacks=[streamlit_callback])
+        st.session_state['messages'].append({"role": "assistant", "content": response})
+        st.write(response)
