@@ -54,3 +54,9 @@ def configure_db(db_uri, mysql_host=None, mysql_user=None, mysql_password=None, 
         mysql_uri = f"mysql+mysqlconnector://{mysql_user}:{mysql_password}@{mysql_host}/{mysql_db}"
         print(f"Connecting to MySQL database at {mysql_uri}")
         return SQLDatabase(create_engine(mysql_uri))
+    
+if db_uri == MYSQL:
+    db = configure_db(db_uri, mysql_host, mysql_user, mysql_password, mysql_db)
+else:
+    db = configure_db(db_uri)
+    
