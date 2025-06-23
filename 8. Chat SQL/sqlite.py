@@ -6,6 +6,9 @@ connection = sqlite3.connect('student.db')
 ### Create a cursor object to interact with the database
 cursor = connection.cursor()
 
+### Drop the table if it exists
+cursor.execute("DROP TABLE IF EXISTS STUDENT")
+
 ### Create a table
 table_info = """
 
