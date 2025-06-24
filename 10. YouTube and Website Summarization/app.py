@@ -45,4 +45,12 @@ if st.button("Summarize the Content from YT or Website"):
                 else:
                     loader = UnstructuredURLLoader(urls=[generic_url], ssl_verify=False,
                                                    headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"})
-                data = loader.load()
+                docs = loader.load()
+
+                ### Summarizing the content
+                chain = load_summarize_chain(llm, chain_type="stuff", prompt=prompt)
+                summary = chain.run(docs)
+
+                st.success(summary)
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
