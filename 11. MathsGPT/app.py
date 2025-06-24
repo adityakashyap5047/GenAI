@@ -75,8 +75,21 @@ if "messages" not in st.session_state:
 for msg in st.session_state["messages"]:
     st.chat_message(msg["role"]).write(msg["content"])
 
-### Function to generate response
-def generate_response(question):
-    response = assistant_agent.invoke({'input': question})
-    return response
+### Lets start the interaction
+question = st.text_area("Enter your question:", "I have 5 bananas and 7 grapes. I eat 2 bananas and give away 3 grapes. Then I buy a dozen apples and 2 packs of blueberries contain 25 barries. How many total fruits do I have at end?")
 
+if st.button("find my answer"):
+    if question:
+        with st.spinner("Generating response..."):
+            st.session_state["messages"].append({"role": "user", "content": question})
+            st.chat_message("user").write(question)
+
+            st_cb = StreamlitCallbackHandler(st.container(), expand_new_thoughts=False)
+            response = assistant_agent.run(st.session_state["messages"], callbacks=[st_cb])
+
+            st.session_state["messages"].append({"role": "assistant", "content": response})
+            st.write('### Response:')
+            st.write(response)
+
+    else:
+        st.warning("Please enter a question to get an answer.")
