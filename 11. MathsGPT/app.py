@@ -67,3 +67,16 @@ assistant_agent = initialize_agent(
     handle_parsing_errors=True,
 )
 
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [
+        {"role": "assistant", "content": "Hello! I am MathsGPT, your personal math assistant. Who can answer your math-related questions"}
+    ]
+
+for msg in st.session_state["messages"]:
+    st.chat_message(msg["role"]).write(msg["content"])
+
+### Function to generate response
+def generate_response(question):
+    response = assistant_agent.invoke({'input': question})
+    return response
+
