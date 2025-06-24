@@ -15,6 +15,18 @@ st.title("🦜 LangChain: Summarized Text")
 with st.sidebar:
     groq_api_key = st.text_input("Enter your Groq API Key", type="password")
 
+### Gemma Model
+llm = ChatGroq(groq_api_key=groq_api_key, model="Gemma2-9b-It")
+
+### Prompt Template
+prompt_template = """
+
+Provide a summary of the following content in 300 words:
+Content: {text}
+
+"""
+
+prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
 
 generic_url = st.text_input("Enter the YouTube URL or Website URL to be summarized", label_visibility="collapsed")
 
