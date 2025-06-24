@@ -11,6 +11,7 @@ langchain_openai
 chromadb
 sentence_transformers
 langchain_huggingface
+huggingface_hub
 faiss_cpu
 langchain_chroma
 streamlit
