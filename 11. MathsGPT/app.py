@@ -19,3 +19,20 @@ if not groq_api_key:
 
 llm = ChatGroq(model="Gemma2-9b-It", groq_api_key=groq_api_key)
 
+### Initializing the tools
+wikipedia_wrapper = WikipediaAPIWrapper()
+wikipedia_tool = Tool(
+    name="Wikipedia",
+    func=wikipedia_wrapper.run,
+    description="A Tool for searching the Internet to find the various information on the topics mentioned"
+)
+
+### Initializing the MATH Tool
+
+math_chain = LLMMathChain.from_llm(llm=llm)
+
+calculator = Tool(
+    name="Calculator",
+    func=math_chain.run,
+    description="A Tool for answering math related questions. Only input mathematical expressions need to be provided."
+)
