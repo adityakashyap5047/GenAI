@@ -41,7 +41,7 @@ if st.button("Summarize the Content from YT or Website"):
             with st.spinner("Waiting..."):
                 ## loading the website or yt content
                 if "youtube.com" in generic_url or "youtu.be" in generic_url:
-                    loader = YoutubeLoader.from_youtube_url(generic_url, add_video_info=True)
+                    loader = YoutubeLoader.from_youtube_url(generic_url, add_video_info=False)
                 else:
                     loader = UnstructuredURLLoader(urls=[generic_url], ssl_verify=False,
                                                    headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36"})
