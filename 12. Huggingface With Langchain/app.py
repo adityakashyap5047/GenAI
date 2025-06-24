@@ -16,9 +16,6 @@ st.title("🦜 LangChain: Summarized Text")
 with st.sidebar:
     hf_api_key = st.text_input("Enter your Hugging Face API Key", type="password")
 
-repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
-llm = HuggingFaceEndpoint(repo_id=repo_id, max_new_tokens=150, temperature=0.7, huggingfacehub_api_token=hf_api_key, task="text-generation")
-
 ### Prompt Template
 prompt_template = """
 
@@ -40,6 +37,10 @@ if st.button("Summarize the Content from YT or Website"):
     else:
         try:
             with st.spinner("Waiting..."):
+                ### Initialize the Hugging Face LLM
+                repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
+                llm = HuggingFaceEndpoint(repo_id=repo_id, max_new_tokens=150, temperature=0.7, huggingfacehub_api_token=hf_api_key, task="text-generation")
+
                 ## loading the website or yt content
                 if "youtube.com" in generic_url or "youtu.be" in generic_url:
                     loader = YoutubeLoader.from_youtube_url(generic_url, add_video_info=False)
