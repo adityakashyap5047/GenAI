@@ -32,3 +32,5 @@ libmagic
 pytube
 numexpr
 gradio
+crewai
+crewai_tools
