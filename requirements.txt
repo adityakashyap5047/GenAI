@@ -31,3 +31,4 @@ python-magic-bin
 libmagic
 pytube
 numexpr
+gradio
