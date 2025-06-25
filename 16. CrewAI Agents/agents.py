@@ -1,6 +1,12 @@
 from crewai import Agent
 from tools import yt_tool
 
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
+
 ### Create a senior blog content researcher
 
 blog_researcher = Agent(
