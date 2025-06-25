@@ -28,3 +28,11 @@ def generate_response(prompt):
         return actual_response
     else:
         print("error: ", response.text)
+
+interface = gr.Interface(
+    fn=generate_response,
+    inputs=gr.Textbox(lines=4, label="Enter your prompt", placeholder="Type here..."),
+    outputs="text",
+)
+
+interface.launch()
