@@ -1,4 +1,5 @@
 from crewai import Agent
+from tools import yt_tool
 
 ### Create a senior blog content researcher
 
@@ -10,7 +11,7 @@ blog_researcher = Agent(
     backstory=(
         "Expert in understanding videos in AI Data Science, Machine Learning and Gen AI and providing suggestion"
     ),
-    tools=[],
+    tools=[yt_tool],
     allow_delegation=True ### Pass to share the task to other agents
 )
 
@@ -25,6 +26,6 @@ blog_writer = Agent(
         "engaging narratives that captivate and educate, bringing new"
         "discoveries to light in an acessible manner."
     ),
-    tools=[],
+    tools=[yt_tool],
     allow_delegation=False
 )
