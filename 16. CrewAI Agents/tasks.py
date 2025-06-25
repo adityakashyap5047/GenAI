@@ -13,3 +13,14 @@ research_task = Task(
     agent=blog_researcher
 )
 
+### Writing Task
+writing_task = Task(
+    description=(
+        "get the info from the youtube channel on the topic {topic}."
+    ),
+    expected_output='Summarize the info from the youtube channel video on the topic {topic} in a compelling blog post.',
+    tools=[yt_tool],
+    agent=blog_writer,
+    async_execution=False,  ###if True then both tasks will run in parallel
+    output_file='blog_post.md'
+)
