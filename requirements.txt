@@ -34,3 +34,6 @@ numexpr
 gradio
 crewai
 crewai_tools
+pinecone
+pinecone_text
+pinecone_notebooks
