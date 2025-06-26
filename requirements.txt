@@ -45,3 +45,4 @@ peft
 bitsandbytes
 transformers
 trl
+lamini
