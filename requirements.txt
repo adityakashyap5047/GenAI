@@ -40,3 +40,8 @@ pinecone_notebooks
 sentence_transformers
 neo4j
 langchain_neo4j
+accelerate
+peft
+bitsandbytes
+transformers
+trl
