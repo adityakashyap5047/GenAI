@@ -46,3 +46,5 @@ bitsandbytes
 transformers
 trl
 lamini
+langgraph
+langsmith
