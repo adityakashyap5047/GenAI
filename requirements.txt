@@ -48,3 +48,5 @@ trl
 lamini
 langgraph
 langsmith
+tiktoken
+langchainhub
